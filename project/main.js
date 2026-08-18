@@ -95,23 +95,7 @@ function render() {
   app.innerHTML = `
     <header class="app-header">
       <div class="dog-scene">
-        <svg class="dog-svg" viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <g class="dog-body">
-            <ellipse cx="55" cy="58" rx="28" ry="18"/>
-            <circle cx="30" cy="35" r="16" class="dog-head"/>
-            <path d="M18 22 L14 12 L26 20" class="dog-ear-l"/>
-            <path d="M42 20 L46 10 L38 24" class="dog-ear-r"/>
-            <circle cx="25" cy="33" r="1.8" fill="currentColor" stroke="none"/>
-            <circle cx="35" cy="33" r="1.8" fill="currentColor" stroke="none"/>
-            <path d="M27 39 Q30 42 33 39" class="dog-snout"/>
-            <path d="M30 39 L30 41" />
-            <path d="M83 68 Q90 55 88 72" class="dog-tail"/>
-            <path d="M45 70 L45 80 M52 72 L52 82 M60 70 L60 80 M68 72 L68 82" class="dog-legs"/>
-          </g>
-          <g class="dog-ground">
-            <path d="M8 85 Q35 83 60 85 T112 85" stroke-dasharray="3 4"/>
-          </g>
-        </svg>
+        <img class="mascot" src="mascot.png" alt="吉祥物" />
       </div>
       <h1 class="app-title">我的待办清单</h1>
       <p class="app-subtitle">记录每一件要做的事 🌸</p>

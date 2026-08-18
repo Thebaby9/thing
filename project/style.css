@@ -42,66 +42,24 @@ body {
   margin: 0 auto;
 }
 
-/* ===== 小狗动画 ===== */
+/* ===== 吉祥物动画 ===== */
 .dog-scene {
   display: flex;
   justify-content: center;
   margin-bottom: 14px;
 }
 
-.dog-svg {
+.mascot {
   width: 96px;
-  height: 72px;
-  color: var(--primary);
-}
-
-.dog-body {
+  height: 96px;
+  border-radius: 22%;
+  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.25);
   animation: dogBounce 0.6s ease-in-out infinite alternate;
-  transform-origin: 60px 58px;
 }
 
 @keyframes dogBounce {
   from { transform: translateY(0); }
   to { transform: translateY(-3px); }
-}
-
-.dog-tail {
-  transform-origin: 83px 68px;
-  animation: wag 0.4s ease-in-out infinite alternate;
-}
-
-@keyframes wag {
-  from { transform: rotate(-12deg); }
-  to { transform: rotate(18deg); }
-}
-
-.dog-ear-l {
-  transform-origin: 18px 22px;
-  animation: earWiggle 1.6s ease-in-out infinite alternate;
-}
-
-.dog-ear-r {
-  transform-origin: 42px 20px;
-  animation: earWiggle 1.6s ease-in-out infinite alternate 0.8s;
-}
-
-@keyframes earWiggle {
-  from { transform: rotate(-6deg); }
-  to { transform: rotate(6deg); }
-}
-
-.dog-snout {
-  transform-origin: 30px 39px;
-  animation: sniff 0.6s ease-in-out infinite alternate;
-}
-
-@keyframes sniff {
-  from { transform: translateY(0); }
-  to { transform: translateY(1.5px) scale(0.92); }
-}
-
-.dog-ground {
-  opacity: 0.4;
 }
 
 /* ===== Header ===== */
