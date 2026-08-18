@@ -766,3 +766,100 @@ body {
     padding: 8px 10px;
   }
 }
+
+/* ===== 添加任务组件(Todoist 式:主行+选项胶囊行) ===== */
+.add-form {
+  display: block;
+}
+
+.add-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.add-main .task-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.add-fab {
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: #fff;
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(236, 72, 153, 0.35);
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+
+.add-fab:hover {
+  transform: scale(1.07);
+  box-shadow: 0 8px 20px rgba(236, 72, 153, 0.45);
+}
+
+.add-fab:active {
+  transform: scale(0.94);
+}
+
+.add-options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.opt-select,
+.opt-datetime {
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--primary-soft);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.opt-select:focus,
+.opt-datetime:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: #fff;
+}
+
+.opt-datetime {
+  color: #7c6470;
+}
+
+.daily-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 0.85rem;
+  background: var(--primary-soft);
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+
+.daily-chip input {
+  display: none;
+}
+
+.daily-chip:has(input:checked) {
+  background: #ecfeff;
+  border-color: #06b6d4;
+  color: #0e7490;
+}

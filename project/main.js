@@ -281,32 +281,35 @@ function render() {
     </header>
 
     <div class="card">
-      <form class="input-row" id="add-form">
-        <input
-          type="text"
-          class="task-input"
-          id="task-input"
-          placeholder="${PROMPTS[0]}"
-          autocomplete="off"
-          maxlength="200"
-        />
-        <select class="priority-select" id="priority-select" title="优先级">
-          <option value="high">高</option>
-          <option value="medium" selected>中</option>
-          <option value="low">低</option>
-        </select>
-        <select class="category-select" id="category-select" title="分类">
-          ${Object.entries(CATEGORIES)
-            .map(([k, v]) => `<option value="${k}" ${k === 'life' ? 'selected' : ''}>${v.icon} ${v.label}</option>`)
-            .join('')}
-        </select>
-        <button type="submit" class="add-btn" id="add-btn">➕ 添加任务</button>
+      <form class="add-form" id="add-form">
+        <div class="add-main">
+          <input
+            type="text"
+            class="task-input"
+            id="task-input"
+            placeholder="${PROMPTS[0]}"
+            autocomplete="off"
+            maxlength="200"
+          />
+          <button type="submit" class="add-fab" id="add-btn" title="添加任务" aria-label="添加任务">➕</button>
+        </div>
+        <div class="add-options">
+          <select class="opt-select" id="priority-select" title="优先级">
+            <option value="high">🔥 高</option>
+            <option value="medium" selected>⚡ 中</option>
+            <option value="low">🌿 低</option>
+          </select>
+          <select class="opt-select" id="category-select" title="分类">
+            ${Object.entries(CATEGORIES)
+              .map(([k, v]) => `<option value="${k}" ${k === 'life' ? 'selected' : ''}>${v.icon} ${v.label}</option>`)
+              .join('')}
+          </select>
+          <input type="datetime-local" class="opt-datetime" id="remind-at" title="提醒时间(可选)" />
+          <label class="daily-chip" title="每天重复">
+            <input type="checkbox" id="daily-toggle" /><span>🔁 每日</span>
+          </label>
+        </div>
       </form>
-      <div class="remind-row">
-        <span class="remind-label">🔔 提醒时间(可选)</span>
-        <input type="datetime-local" class="remind-input" id="remind-at" />
-        <label class="daily-toggle"><input type="checkbox" id="daily-toggle" /> 🔁 每日任务</label>
-      </div>
     </div>
 
     <div class="stats">
