@@ -10,6 +10,43 @@ const PRIORITIES = {
 
 const app = document.querySelector('#app')
 
+// Capacitor 原生壳(内置打包版)检测:原生下用本地通知插件,提醒在应用关闭后也能触发
+const isNativeApp = !!window.Capacitor && window.Capacitor.isNativePlatform()
+
+function nativeId(t) {
+  return Math.abs(Math.floor(t.id)) % 2000000000
+}
+
+async function scheduleNativeReminder(t) {
+  if (!isNativeApp || !t.remindAt) return
+  try {
+    const { LocalNotifications } = window.Capacitor.Plugins
+    await LocalNotifications.requestPermissions()
+    await LocalNotifications.schedule({
+      notifications: [
+        {
+          id: nativeId(t),
+          title: '待办提醒',
+          body: t.text,
+          schedule: { at: new Date(t.remindAt) },
+        },
+      ],
+    })
+  } catch {
+    /* 原生插件不可用时静默,网页通知逻辑兜底 */
+  }
+}
+
+async function cancelNativeReminder(t) {
+  if (!isNativeApp || !t.remindAt) return
+  try {
+    const { LocalNotifications } = window.Capacitor.Plugins
+    await LocalNotifications.cancel({ notifications: [{ id: nativeId(t) }] })
+  } catch {
+    /* 同上 */
+  }
+}
+
 let tasks = loadTasks()
 let filter = 'all' // all | pending | done
 let editingId = null
@@ -50,11 +87,17 @@ function toggleTask(id) {
   if (t) {
     t.done = !t.done
     saveTasks()
+    if (t.done) cancelNativeReminder(t)
+    else if (t.remindAt && new Date(t.remindAt).getTime() > Date.now()) {
+      scheduleNativeReminder(t)
+    }
     render()
   }
 }
 
 function removeTask(id) {
+  const t = tasks.find((x) => x.id === id)
+  if (t) cancelNativeReminder(t)
   tasks = tasks.filter((t) => t.id !== id)
   saveTasks()
   render()
@@ -192,7 +235,7 @@ function render() {
                 : `<span class="task-text"></span>
                    ${priorityBadge(t.priority)}
                    ${t.remindAt ? `<span class="remind-badge">🔔 ${fmtRemind(t.remindAt)}</span>` : ''}
-                   ${t.remindAt && !t.done && isAndroid() ? `<button class="icon-btn alarm-btn" title="加入系统闹钟" aria-label="加入系统闹钟">⏰</button>` : ''}
+                   ${t.remindAt && !t.done && isAndroid() && !isNativeApp ? `<button class="icon-btn alarm-btn" title="加入系统闹钟" aria-label="加入系统闹钟">⏰</button>` : ''}
                    <button class="icon-btn edit-btn" title="编辑" aria-label="编辑任务">✎</button>
                    <button class="delete-btn" title="删除" aria-label="删除任务">🗑</button>`
             }
@@ -262,6 +305,7 @@ function bindEvents() {
       }
       addTask(value, priority, remindAt)
       app.querySelector('#remind-at').value = ''
+      if (remindAt) scheduleNativeReminder(tasks[0])
     }
   })
 
