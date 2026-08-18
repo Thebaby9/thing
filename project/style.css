@@ -627,3 +627,42 @@ body {
     height: 60px;
   }
 }
+
+/* ===== 提醒时间 ===== */
+.remind-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.remind-label {
+  font-size: 0.82rem;
+  color: var(--muted, #64748b);
+  white-space: nowrap;
+}
+
+.remind-input {
+  flex: 1;
+  min-width: 180px;
+  padding: 8px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  background: #fff;
+  color: inherit;
+}
+
+.remind-badge {
+  font-size: 0.72rem;
+  background: #eef2ff;
+  color: #4f46e5;
+  padding: 2px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.alarm-btn {
+  color: #4f46e5;
+}

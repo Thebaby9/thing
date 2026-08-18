@@ -32,8 +32,15 @@ function saveTasks() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
 }
 
-function addTask(text, priority) {
-  tasks.unshift({ id: Date.now() + Math.random(), text, done: false, priority })
+function addTask(text, priority, remindAt) {
+  tasks.unshift({
+    id: Date.now() + Math.random(),
+    text,
+    done: false,
+    priority,
+    remindAt: remindAt || null,
+    reminded: false,
+  })
   saveTasks()
   render()
 }
@@ -118,6 +125,10 @@ function render() {
         </select>
         <button type="submit" class="add-btn" id="add-btn">➕ 添加任务</button>
       </form>
+      <div class="remind-row">
+        <span class="remind-label">🔔 提醒时间(可选)</span>
+        <input type="datetime-local" class="remind-input" id="remind-at" />
+      </div>
     </div>
 
     <div class="stats">
@@ -180,6 +191,8 @@ function render() {
                    </div>`
                 : `<span class="task-text"></span>
                    ${priorityBadge(t.priority)}
+                   ${t.remindAt ? `<span class="remind-badge">🔔 ${fmtRemind(t.remindAt)}</span>` : ''}
+                   ${t.remindAt && !t.done && isAndroid() ? `<button class="icon-btn alarm-btn" title="加入系统闹钟" aria-label="加入系统闹钟">⏰</button>` : ''}
                    <button class="icon-btn edit-btn" title="编辑" aria-label="编辑任务">✎</button>
                    <button class="delete-btn" title="删除" aria-label="删除任务">🗑</button>`
             }
@@ -242,7 +255,13 @@ function bindEvents() {
     const value = input.value.trim()
     if (value) {
       const priority = app.querySelector('#priority-select').value
-      addTask(value, priority)
+      const remindRaw = app.querySelector('#remind-at').value
+      const remindAt = remindRaw ? new Date(remindRaw).toISOString() : null
+      if (remindAt && 'Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission()
+      }
+      addTask(value, priority, remindAt)
+      app.querySelector('#remind-at').value = ''
     }
   })
 
@@ -271,6 +290,14 @@ function bindEvents() {
       delBtn.addEventListener('click', () => {
         li.classList.add('removing')
         setTimeout(() => removeTask(id), 180)
+      })
+    }
+
+    const alarmBtn = li.querySelector('.alarm-btn')
+    if (alarmBtn) {
+      alarmBtn.addEventListener('click', () => {
+        const t = tasks.find((x) => x.id === id)
+        if (t && t.remindAt) addSystemAlarm(t)
       })
     }
 
@@ -339,10 +366,53 @@ function bindEvents() {
     })
   }
 
-  if (!editingId) input.focus()
+  // 触屏设备(手机)不自动聚焦输入框,避免每次操作后弹出键盘
+  const finePointer = window.matchMedia('(pointer: fine)').matches
+  if (!editingId && finePointer) input.focus()
 }
 
 render()
+
+function fmtRemind(iso) {
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return ''
+  const pad = (n) => String(n).padStart(2, '0')
+  return `${d.getMonth() + 1}/${d.getDate()} ${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
+
+function isAndroid() {
+  return /Android/i.test(navigator.userAgent)
+}
+
+function addSystemAlarm(t) {
+  const d = new Date(t.remindAt)
+  if (Number.isNaN(d.getTime())) return
+  const intent =
+    'intent:#Intent;action=android.intent.action.SET_ALARM;' +
+    `i.android.intent.extra.alarm.HOUR=${d.getHours()};` +
+    `i.android.intent.extra.alarm.MINUTES=${d.getMinutes()};` +
+    `S.android.intent.extra.alarm.MESSAGE=${encodeURIComponent(t.text)};` +
+    'i.android.intent.extra.alarm.SKIP_UI=true;end'
+  window.location.href = intent
+}
+
+function checkReminders() {
+  const now = Date.now()
+  let changed = false
+  for (const t of tasks) {
+    if (t.remindAt && !t.reminded && !t.done && new Date(t.remindAt).getTime() <= now) {
+      t.reminded = true
+      changed = true
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('待办提醒', { body: t.text, tag: String(t.id) })
+      }
+    }
+  }
+  if (changed) saveTasks()
+}
+
+checkReminders()
+setInterval(checkReminders, 20000)
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
