@@ -33,6 +33,7 @@ body {
   margin: 0;
   min-height: 100vh;
   padding: 48px 20px 80px;
+  overflow-x: hidden;
   background: linear-gradient(160deg, #fde7f0 0%, #fce7f3 40%, #fae8ff 100%);
   background-attachment: fixed;
 }
@@ -93,6 +94,7 @@ body {
 
 .input-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
@@ -205,6 +207,7 @@ body {
 /* ===== Filters ===== */
 .filters {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 14px;
 }
@@ -243,8 +246,9 @@ body {
 
 .task-item {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 8px 10px;
   background: var(--card);
   border-radius: var(--radius-sm);
   padding: 14px 16px 14px 18px;
@@ -404,7 +408,8 @@ body {
 
 /* ===== Task text ===== */
 .task-text {
-  flex: 1;
+  flex: 1 1 55%;
+  min-width: 160px;
   font-size: 1rem;
   color: var(--text);
   word-break: break-word;
