@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.thebaby9.todo",
+    "sha256_cert_fingerprints": ["6C:04:1E:54:DA:2B:BF:5E:8F:F8:9D:55:42:95:48:C4:08:F3:AF:BD:BE:3B:EC:73:AC:71:50:70:DA:AD:89:7A"]
+  }
+}]
