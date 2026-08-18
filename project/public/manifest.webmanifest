@@ -1,6 +1,6 @@
 {
   "name": "待办事项",
-  "short_name": "待办",
+  "short_name": "待办事项",
   "description": "简单好用的待办清单",
   "lang": "zh-CN",
   "start_url": "./",
